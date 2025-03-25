@@ -27,7 +27,7 @@ import ClientReviewList from "../reviews/ClientReviewList";
 
 export default function VendorProfile() {
   const { vendorId } = useParams();
-  const [showChat, setShowChat] = useState(false);
+  const [showChat] = useState(false);
   const [activeTab, setActiveTab] = useState("personal");
   const navigate = useNavigate();
 
@@ -267,10 +267,7 @@ export default function VendorProfile() {
       </Card>
       {showChat && (
         <div className="mt-4 border rounded-lg">
-          <ClientOneToOneChatPage
-            vendorId={vendorId}
-            onClose={() => setShowChat(false)}
-          />
+          <ClientOneToOneChatPage />
         </div>
       )}
     </div>
