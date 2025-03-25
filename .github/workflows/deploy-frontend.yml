@@ -1,0 +1,46 @@
+name: Deploy Frontend to S3 and CloudFront
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ secrets.NODE_VERSION  }}
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build React App
+        env : 
+          VITE_AUTH_API_URI: ${{ secrets.VITE_AUTH_API_URI }}
+          VITE_PRIVATE_API_URI: ${{ secrets.VITE_PRIVATE_API_URI }}
+          VITE_CHAT_API_URI: ${{ secrets.VITE_CHAT_API_URI }}
+          VITE_SOCKET_URL: ${{ secrets.VITE_SOCKET_URL }}
+          VITE_CLOUDINARY_UPLOAD_PRESET_NAME: ${{ secrets.VITE_CLOUDINARY_UPLOAD_PRESET_NAME }}
+          VITE_CLOUDINARY_CLOUD_NAME: ${{ secrets.VITE_CLOUDINARY_CLOUD_NAME }}
+          VITE_STRIPE_PK: ${{ secrets.VITE_STRIPE_PK }}
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+      
+        run: npm run build
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Sync Build to S3
+        run: aws s3 sync dist/ s3://zyra-moments --delete
+
+      - name: Invalidate CloudFront Cache
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
