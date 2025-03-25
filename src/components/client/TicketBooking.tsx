@@ -49,7 +49,7 @@ export interface Event {
 
 export default function TicketBooking({ event }: { event: Event }) {
   const [ticketCount, setTicketCount] = useState(1);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessing] = useState(false);
 
   // Format date and time
   const eventDate = parseISO(event.date);
@@ -72,17 +72,17 @@ export default function TicketBooking({ event }: { event: Event }) {
   const serviceFee = Math.round(subtotal * 0.05); // 5% service fee
   const totalPrice = subtotal + serviceFee;
 
-  const onSubmit = async () => {
-    setIsProcessing(true);
+  // const onSubmit = async () => {
+  //   setIsProcessing(true);
 
-    try {
-    } catch (error) {
-      console.error("Booking failed:", error);
-      alert("There was an error processing your booking. Please try again.");
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+  //   try {
+  //   } catch (error) {
+  //     console.error("Booking failed:", error);
+  //     alert("There was an error processing your booking. Please try again.");
+  //   } finally {
+  //     setIsProcessing(false);
+  //   }
+  // };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">

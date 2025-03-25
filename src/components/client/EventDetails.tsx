@@ -24,7 +24,7 @@ import TicketSuccessModal, {
 } from "../modals/TicketSuccessModal";
 
 function MapMarker({ position, setPosition }: MapMarkerProps) {
-  const map = useMapEvents({
+  useMapEvents({
     click(e) {
       setPosition([e.latlng.lat, e.latlng.lng]);
     },
@@ -51,7 +51,7 @@ function MapMarker({ position, setPosition }: MapMarkerProps) {
 }
 
 export default function EventDetails({ event }: { event: Event }) {
-  const [ticketCount, setTicketCount] = useState(1);
+  const [ticketCount] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isBookingSuccess, setIsBookingSuccess] = useState(false);
