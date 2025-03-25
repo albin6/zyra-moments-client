@@ -14,7 +14,6 @@ import {
   Check,
   Download,
   Share2,
-  X,
   Calendar,
   Clock,
   MapPin,

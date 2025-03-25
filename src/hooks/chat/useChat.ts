@@ -3,7 +3,6 @@ import { useSocket } from "@/context/SocketContext";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import {
-  addMessage,
   IChatRoom,
   setContacts,
   setMessages,

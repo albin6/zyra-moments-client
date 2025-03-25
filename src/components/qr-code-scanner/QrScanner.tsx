@@ -16,7 +16,6 @@ import { useTicketMutation } from "@/hooks/event/useTicket";
 export default function QRScanner({
   handleShowSuccess,
   handleShowError,
-  setShowQRScannerModal,
 }: {
   handleShowSuccess: () => void;
   handleShowError: () => void;

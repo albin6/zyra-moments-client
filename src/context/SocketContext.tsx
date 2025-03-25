@@ -2,12 +2,12 @@ import { RootState } from "@/store/store";
 import { createContext, useContext, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
-import type { Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:8080";
 const SOCKET_PATH = "/api/v_1/_chat";
 
-const SocketContext = createContext<Socket | null>(null);
+const SocketContext = createContext<typeof Socket | null>(null);
 
 export function SocketProvider({ children }: { children: React.ReactNode }) {
   const client = useSelector((state: RootState) => state.client.client);
@@ -16,7 +16,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   const user = client || vendor;
   const userType = client ? "Client" : vendor ? "Vendor" : undefined;
 
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const [socket, setSocket] = useState<typeof Socket | null>(null);
 
   useEffect(() => {
     if (socket && socket.connected) {

@@ -81,7 +81,7 @@ export interface MapMarkerProps {
 }
 
 function MapMarker({ position, setPosition }: MapMarkerProps) {
-  const map = useMapEvents({
+  useMapEvents({
     click(e) {
       setPosition([e.latlng.lat, e.latlng.lng]);
     },

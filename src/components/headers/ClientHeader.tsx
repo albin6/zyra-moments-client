@@ -28,7 +28,7 @@ const navItems = [
 ];
 
 interface ClientHeaderProps {
-  client: Client;
+  client?: Client;
 }
 
 export function ClientHeader({ client }: ClientHeaderProps) {
@@ -119,7 +119,7 @@ export function ClientHeader({ client }: ClientHeaderProps) {
                 >
                   <Avatar className="h-8 w-8">
                     <AvatarImage
-                      src={client.profileImage || "/placeholder-avatar.jpg"}
+                      src={client?.profileImage || "/placeholder-avatar.jpg"}
                       alt="@username"
                     />
                     <AvatarFallback>

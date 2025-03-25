@@ -71,7 +71,7 @@ export default function TicketBookingModal({
   setIsSuccess,
   setTicketDetails,
 }: TicketBookingModalProps) {
-  const [ticketCount, setTicketCount] = useState(1);
+  const [ticketCount] = useState(1);
 
   // Format date and time
   const eventDate = parseISO(event.date);
