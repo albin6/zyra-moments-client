@@ -36,6 +36,7 @@ function ChatSection({
             onSendMessage={handleSendMessage}
             userType="Client"
             messages={[]}
+            chatRoomId={''}
           />
         ) : (
           <Card className="p-6 text-center">

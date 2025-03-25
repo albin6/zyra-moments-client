@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import {
   Plus,
   FolderTree,
-  FileQuestion,
   ToggleLeft,
   ToggleRight,
 } from "lucide-react";

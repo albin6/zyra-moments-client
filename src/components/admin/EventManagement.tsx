@@ -38,7 +38,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Pagination from "../Pagination";
 import { PopulatedEvent } from "@/types/Event";
 import { usePaginatedEvents } from "@/hooks/event/useEvent";
-import _, { StringNullableChain } from "lodash";
+import _ from "lodash";
 import { AdminFundReleaseModal } from "../modals/AdminFundReleaseList";
 import {
   useFundReleaseMutation,
@@ -46,7 +46,6 @@ import {
 } from "@/hooks/event/useReleaseFund";
 import { Spinner } from "../ui/spinner";
 import {
-  FundReleaseRequestResponse,
   updateFundReleaseRequestStatus,
 } from "@/services/event/fundReleaseService";
 import { toast } from "sonner";

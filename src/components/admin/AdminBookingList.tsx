@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 
 import { useState, useEffect } from "react";
@@ -90,11 +88,11 @@ export interface BookingList {
   paymentId: string;
 }
 
-type BookingResponse = {
-  bookings: BookingList[];
-  totalPages: number;
-  currentPage: number;
-};
+// type BookingResponse = {
+//   bookings: BookingList[];
+//   totalPages: number;
+//   currentPage: number;
+// };
 
 const statusOptions = [
   { value: "all", label: "All Statuses" },
@@ -149,7 +147,7 @@ const getPaymentStatusBadgeColor = (status: string) => {
 };
 
 export default function AdminBookingList() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [bookings, setBookings] = useState<BookingList[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);

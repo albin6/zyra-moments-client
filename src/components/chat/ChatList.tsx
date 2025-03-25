@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,16 +9,16 @@ import { cn } from "@/lib/utils";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
-interface ChatContact {
-  id: string; // clientId or vendorId
-  chatRoomId: string; // Added to match ChatPage usage
-  name: string;
-  avatar?: string;
-  lastMessage?: string;
-  lastMessageTime?: Date;
-  unreadCount?: number;
-  status?: "online" | "offline";
-}
+// interface ChatContact {
+//   id: string; // clientId or vendorId
+//   chatRoomId: string; // Added to match ChatPage usage
+//   name: string;
+//   avatar?: string;
+//   lastMessage?: string;
+//   lastMessageTime?: Date;
+//   unreadCount?: number;
+//   status?: "online" | "offline";
+// }
 
 interface ChatListProps {
   onSelectContact?: (contactId: string) => void;
