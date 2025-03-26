@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import {
   Carousel,
@@ -12,6 +13,7 @@ const carouselImages = [
   "https://res.cloudinary.com/dkgic4cru/image/upload/v1738309017/pexels-jeremy-wong-382920-1043902_y4u76q.jpg",
 ];
 function ClientLandingHeroCarouselSection() {
+  const navigate = useNavigate();
   return (
     <section className="pt-16 pb-16 md:pt-24 md:pb-24">
       <div className="container mx-auto px-4">
@@ -25,8 +27,12 @@ function ClientLandingHeroCarouselSection() {
               experiences with our cutting-edge platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button size="lg" className="text-lg px-8">
-                Start Free Trial
+              <Button
+                size="lg"
+                className="text-lg px-8"
+                onClick={() => navigate("/events/discover")}
+              >
+                Discover
               </Button>
               <Button size="lg" variant="outline" className="text-lg px-8">
                 Watch Demo
