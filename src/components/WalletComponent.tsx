@@ -190,7 +190,31 @@ export default function WalletComponent({
               <span className="font-medium">
                 {formatPrice(
                   transactions.paymentId?.reduce(
-                    (sum, wallet) => sum + wallet.amount,
+                    (sum, wallet) => {
+                      if (wallet.status == PaymentStatus.REFUNDED) {
+                        return sum + wallet.amount
+                      }
+                      return sum
+                    },
+                    0
+                  )
+                )}
+              </span>
+            </div>
+            <Separator />
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">
+                Total Pendings
+              </span>
+              <span className="font-medium">
+                {formatPrice(
+                  transactions.paymentId?.reduce(
+                    (sum, wallet) => {
+                      if (wallet.status == PaymentStatus.PENDING) {
+                        return sum + wallet.amount
+                      }
+                      return sum
+                    },
                     0
                   )
                 )}
