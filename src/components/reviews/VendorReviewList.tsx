@@ -49,7 +49,7 @@ const StarRating = ({ rating }: { rating: number }) => {
           }`}
         />
       ))}
-      <span className="ml-2 text-sm font-medium">{rating.toFixed(1)}</span>
+      <span className="ml-2 text-sm font-medium">{rating ? rating.toFixed(1) : 0}</span>
     </div>
   );
 };
@@ -226,7 +226,7 @@ export default function VendorReviewList() {
                     </div>
                     <div className="flex items-center gap-2">
                       <DollarSign className="h-4 w-4 text-muted-foreground" />
-                      <span>${review.bookingId.totalPrice.toFixed(2)}</span>
+                      <span>${review?.bookingId.totalPrice.toFixed(2) || 0}</span>
                     </div>
                   </div>
 
