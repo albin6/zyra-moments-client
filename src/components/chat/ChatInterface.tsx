@@ -1,6 +1,6 @@
 // components/chat/ChatInterface.tsx
 import { useState, useRef, useEffect } from "react";
-import { Send, Paperclip } from "lucide-react";
+import { Send, Paperclip, X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -11,6 +11,14 @@ import { RootState } from "@/store/store";
 import { useDispatch } from "react-redux";
 import { addMessage, setMessages } from "@/store/slices/chatSlice";
 import { useSocket } from "@/context/SocketContext";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { uploadToCloudinary } from "@/utils/upload-cloudinary/cloudinary";
 
 interface Message {
   _id: string;
@@ -47,6 +55,11 @@ export function ChatInterface({
   const [newMessage, setNewMessage] = useState("");
   const [isTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const socket = useSocket();
 
@@ -110,6 +123,49 @@ export function ChatInterface({
     }
   };
 
+  const handleFileClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      const previewUrl = URL.createObjectURL(file);
+      setFilePreview(previewUrl);
+      setIsPreviewOpen(true);
+    }
+    // Reset the input so the same file can be selected again if needed
+    e.target.value = "";
+  };
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+    if (filePreview) {
+      URL.revokeObjectURL(filePreview);
+    }
+    setFilePreview(null);
+    setIsPreviewOpen(false);
+  };
+
+  const handleSendFile = async () => {
+    if (selectedFile) {
+      setIsUploading(true);
+      try {
+        const fileUrl = await uploadToCloudinary(selectedFile);
+        onSendMessage?.(fileUrl);
+        handleRemoveFile();
+      } catch (error) {
+        console.error("Failed to upload file:", error);
+        // You could add error handling UI here
+      } finally {
+        setIsUploading(false);
+      }
+    }
+  };
+
+  const isImage = selectedFile?.type.startsWith("image/");
+
   return (
     <Card className={cn("flex flex-col h-[600px] w-full", className)}>
       <div className="flex items-center p-4 border-b space-x-2">
@@ -156,7 +212,15 @@ export function ChatInterface({
                     : "bg-muted"
                 )}
               >
-                <p className="break-words">{message.content}</p>
+                {message.content.startsWith("https://res.cloudinary.com") ? (
+                  <img 
+                    src={message.content} 
+                    alt="Shared image" 
+                    className="max-w-full rounded mb-2"
+                  />
+                ) : (
+                  <p className="break-words">{message.content}</p>
+                )}
                 <p className="text-xs mt-1 opacity-70">
                   {new Date(message.createdAt).toLocaleTimeString([], {
                     hour: "2-digit",
@@ -172,11 +236,19 @@ export function ChatInterface({
       </div>
       <div className="p-4 border-t">
         <div className="flex items-end gap-2">
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            accept="image/*"
+            className="hidden"
+          />
           <Button
             variant="outline"
             size="icon"
             className="rounded-full h-10 w-10 flex-shrink-0"
             type="button"
+            onClick={handleFileClick}
           >
             <Paperclip className="h-5 w-5" />
             <span className="sr-only">Attach file</span>
@@ -202,6 +274,55 @@ export function ChatInterface({
           </Button>
         </div>
       </div>
+
+      {/* File Preview Modal */}
+      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Send Image</DialogTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-4 top-4"
+              onClick={handleRemoveFile}
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </Button>
+          </DialogHeader>
+          <div className="flex flex-col items-center justify-center p-4">
+            {isImage && filePreview ? (
+              <img
+                src={filePreview}
+                alt="Preview"
+                className="max-h-64 max-w-full rounded"
+              />
+            ) : (
+              <div className="flex items-center justify-center h-64 w-full border rounded bg-muted">
+                <p>{selectedFile?.name || "File"}</p>
+              </div>
+            )}
+            <p className="mt-2 text-sm text-muted-foreground">
+              {selectedFile?.name} ({((selectedFile?.size || 0) / 1024).toFixed(2)} KB)
+            </p>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="secondary"
+              onClick={handleRemoveFile}
+              disabled={isUploading}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSendFile}
+              disabled={!selectedFile || isUploading}
+            >
+              {isUploading ? "Uploading..." : "Send Image"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

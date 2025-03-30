@@ -68,8 +68,22 @@ export function ChatPage({ userType }: ChatPageProps) {
       (c) => c.chatRoomId === selectedChatRoomId
     );
     if (!selectedContact) return;
-    sendMessage(selectedChatRoomId, message, selectedContact.id);
+    const isFile = (message && message.startsWith("https://res.cloudinary.com")) ? true : false
+    if (isFile) {
+      sendMessage(selectedChatRoomId, "", selectedContact.id, message);
+    } else {
+      sendMessage(selectedChatRoomId, message, selectedContact.id);
+    }
   };
+
+  // const handleSendFile = (file: string) => {
+  //   if (!selectedChatRoomId) return;
+  //   const selectedContact = contacts.find(
+  //     (c) => c.chatRoomId === selectedChatRoomId
+  //   );
+  //   if (!selectedContact) return;
+  //   sendMessage(selectedChatRoomId, "", selectedContact.id, file);
+  // };
 
   const handleSelectContact = (contactId: string) => {
     const contact = contacts.find((c) => c.id === contactId);

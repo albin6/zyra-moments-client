@@ -91,7 +91,9 @@ export function ChatList({
                         />
                         <AvatarFallback>
                           {contact.name.split(" ")[0][0].toUpperCase()}
-                          {contact.name.split(" ")[1][0] ? contact.name.split(" ")[1][0].toUpperCase() : ""}
+                          {contact.name.split(" ")[1][0]
+                            ? contact.name.split(" ")[1][0].toUpperCase()
+                            : ""}
                         </AvatarFallback>
                       </Avatar>
                       {/* <Avatar className="h-12 w-12 mr-3">
@@ -124,7 +126,9 @@ export function ChatList({
                       </div>
                       {contact.lastMessage && (
                         <p className="text-sm text-muted-foreground truncate">
-                          {contact.lastMessage}
+                          {contact.lastMessage.startsWith("https://")
+                            ? "file"
+                            : contact.lastMessage}
                         </p>
                       )}
                     </div>

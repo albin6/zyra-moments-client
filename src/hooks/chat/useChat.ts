@@ -120,6 +120,7 @@ export function useChat(userId: string, userType: "Client" | "Vendor") {
       chatRoomId: string | undefined,
       content: string,
       recipientId: string,
+      file?:any,
       bookingId?: string
     ) => {
       if (!socket) return;
@@ -138,6 +139,7 @@ export function useChat(userId: string, userType: "Client" | "Vendor") {
         senderType: userType,
         content,
         chatRoomId,
+        file,
         bookingId,
       });
     },
