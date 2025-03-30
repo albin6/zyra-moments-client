@@ -1,6 +1,6 @@
 // components/chat/ChatInterface.tsx
 import { useState, useRef, useEffect } from "react";
-import { Send, Paperclip, X } from "lucide-react";
+import { Send, Paperclip, X, Check } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -19,6 +19,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { uploadToCloudinary } from "@/utils/upload-cloudinary/cloudinary";
+import { IoMdDoneAll } from "react-icons/io";
 
 interface Message {
   _id: string;
@@ -26,6 +27,7 @@ interface Message {
   content: string;
   senderId: string;
   senderType: "Client" | "Vendor";
+  readReceipt: "sent" | "delivered" | "seen";
   read: boolean;
   createdAt: Date;
 }
@@ -77,7 +79,12 @@ export function ChatInterface({
   }, [messages]);
 
   useEffect(() => {
-    console.log('-----------socket - chat room id - userId-------------', socket, chatRoomId, userId)
+    console.log(
+      "-----------socket - chat room id - userId-------------",
+      socket,
+      chatRoomId,
+      userId
+    );
     if (socket && chatRoomId && userId) {
       socket.emit("messageRead", { chatRoomId, userId, userType });
 
@@ -89,6 +96,12 @@ export function ChatInterface({
       socket.on("messagesUpdated", (updatedMessages: Message[]) => {
         console.log("Received messagesUpdated:", updatedMessages); // Debug log
         dispatch(setMessages({ chatRoomId, messages: updatedMessages }));
+      });
+
+      socket.on("readReceiptUpdate", (updatedMessages: Message[]) => {
+        console.log("Received readReceiptUpdate:", updatedMessages);
+        dispatch(setMessages({ chatRoomId, messages: updatedMessages }));
+        scrollToBottom();
       });
 
       socket.on("chatUpdate", (chatRoom: any) => {
@@ -213,19 +226,31 @@ export function ChatInterface({
                 )}
               >
                 {message.content.startsWith("https://res.cloudinary.com") ? (
-                  <img 
-                    src={message.content} 
-                    alt="Shared image" 
+                  <img
+                    src={message.content}
+                    alt="Shared image"
                     className="max-w-full rounded mb-2"
                   />
                 ) : (
                   <p className="break-words">{message.content}</p>
                 )}
-                <p className="text-xs mt-1 opacity-70">
+                <p className="text-xs mt-1 opacity-70 flex items-center space-x-2">
                   {new Date(message.createdAt).toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
+                  {message.senderType === userType &&
+                    message.readReceipt == "sent" && (
+                      <Check className="h-5 w-5" />
+                    )}
+                  {message.senderType === userType &&
+                    message.readReceipt == "delivered" && (
+                      <IoMdDoneAll className="h-5 w-5" />
+                    )}
+                  {message.senderType === userType &&
+                    message.readReceipt == "seen" && (
+                      <IoMdDoneAll className="h-5 w-5 fill-blue-700" />
+                    )}
                 </p>
               </div>
             </div>
@@ -303,7 +328,8 @@ export function ChatInterface({
               </div>
             )}
             <p className="mt-2 text-sm text-muted-foreground">
-              {selectedFile?.name} ({((selectedFile?.size || 0) / 1024).toFixed(2)} KB)
+              {selectedFile?.name} (
+              {((selectedFile?.size || 0) / 1024).toFixed(2)} KB)
             </p>
           </div>
           <DialogFooter>

@@ -31,6 +31,7 @@ export interface Message {
   content: string;
   senderId: string;
   senderType: "Client" | "Vendor";
+  readReceipt: "sent" | "delivered" | "seen";
   read: boolean;
   createdAt: Date;
 }
@@ -96,6 +97,7 @@ export function useChat(userId: string, userType: "Client" | "Vendor") {
             : undefined,
           unreadCount: room.unreadCount,
           status: room.recipientStatus,
+          updatedAt: room.updatedAt
         }));
 
         dispatch(setContacts(mappedContacts));

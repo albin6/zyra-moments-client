@@ -42,6 +42,8 @@ export function ChatList({
     contact.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  console.log('here is the contacts =>', contacts)
+
   return (
     <Card className={cn("flex flex-col h-[600px] w-full max-w-md", className)}>
       <div className="p-4 border-b">
@@ -115,12 +117,16 @@ export function ChatList({
                         <h3 className="font-medium truncate">{contact.name}</h3>
                         {contact.lastMessageTime && (
                           <span className="text-xs text-muted-foreground ml-2 flex-shrink-0">
-                            {new Date(
-                              contact.lastMessageTime
-                            ).toLocaleDateString([], {
-                              month: "short",
-                              day: "numeric",
-                            })}
+                            {new Date(contact?.updatedAt!).toLocaleString(
+                              [],
+                              {
+                                month: "short",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true, // Ensures AM/PM format
+                              }
+                            )}
                           </span>
                         )}
                       </div>

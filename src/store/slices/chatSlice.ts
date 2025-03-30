@@ -9,6 +9,7 @@ interface Contact {
   lastMessage?: string;
   lastMessageTime?: string;
   unreadCount?: number;
+  updatedAt?: string;
   status?: "online" | "offline";
 }
 
@@ -18,21 +19,22 @@ interface Message {
   content: string;
   senderId: string;
   senderType: "Client" | "Vendor";
+  readReceipt: "sent" | "delivered" | "seen";
   read: boolean;
   createdAt: Date;
 }
 
 export interface IChatRoom {
-  _id?: string 
+  _id?: string;
   clientId: string;
   vendorId: string;
   bookingId: string;
   lastMessage: {
-    content: string,
-    senderId: string ,
-    senderType: "Client" | "Vendor"
-    createdAt: Date 
-  },
+    content: string;
+    senderId: string;
+    senderType: "Client" | "Vendor";
+    createdAt: Date;
+  };
   unreadCountClient: number;
   unreadCountVendor: number;
   createdAt?: Date;
@@ -63,15 +65,25 @@ const chatSlice = createSlice({
       action: PayloadAction<{ chatRoomId: string; messages: Message[] }>
     ) => {
       // Ensure messages is an array
-      console.log('chat room id =>',action.payload.chatRoomId, 'messages =>', action.payload.messages)
-      const messages = Array.isArray(action.payload.messages) ? action.payload.messages : [];
-      state.messages[action.payload.chatRoomId] = messages
+      console.log(
+        "chat room id =>",
+        action.payload.chatRoomId,
+        "messages =>",
+        action.payload.messages
+      );
+      const messages = Array.isArray(action.payload.messages)
+        ? action.payload.messages
+        : [];
+      state.messages[action.payload.chatRoomId] = messages;
     },
     addMessage: (state, action: PayloadAction<Message>) => {
       const chatRoomId = action.payload.chatRoomId;
       // Ensure chatRoomId key is an array
       if (!Array.isArray(state.messages[chatRoomId])) {
-        console.warn(`state.messages[${chatRoomId}] was not an array, resetting to []`, state.messages[chatRoomId]);
+        console.warn(
+          `state.messages[${chatRoomId}] was not an array, resetting to []`,
+          state.messages[chatRoomId]
+        );
         state.messages[chatRoomId] = [];
       }
       state.messages[chatRoomId].push(action.payload);
@@ -79,10 +91,14 @@ const chatSlice = createSlice({
       const contact = state.contacts.find((c) => c.chatRoomId === chatRoomId);
       if (contact) {
         contact.lastMessage = action.payload.content;
-        contact.lastMessageTime = new Date(action.payload.createdAt).toISOString();
+        contact.lastMessageTime = new Date(
+          action.payload.createdAt
+        ).toISOString();
         if (
-          (action.payload.senderType === "Vendor" && state.selectedChatRoomId !== chatRoomId) ||
-          (action.payload.senderType === "Client" && state.selectedChatRoomId !== chatRoomId)
+          (action.payload.senderType === "Vendor" &&
+            state.selectedChatRoomId !== chatRoomId) ||
+          (action.payload.senderType === "Client" &&
+            state.selectedChatRoomId !== chatRoomId)
         ) {
           contact.unreadCount = (contact.unreadCount || 0) + 1;
         }
@@ -91,7 +107,9 @@ const chatSlice = createSlice({
     setSelectedChatRoomId: (state, action: PayloadAction<string | null>) => {
       state.selectedChatRoomId = action.payload;
       if (action.payload) {
-        const contact = state.contacts.find((c) => c.chatRoomId === action.payload);
+        const contact = state.contacts.find(
+          (c) => c.chatRoomId === action.payload
+        );
         if (contact) contact.unreadCount = 0;
       }
     },
