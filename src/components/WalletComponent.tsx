@@ -174,10 +174,12 @@ export default function WalletComponent({
               <span className="font-medium">
                 {formatPrice(
                   transactions?.paymentId
-                    ? transactions?.paymentId?.reduce(
-                        (sum, wallet) => sum + wallet.amount,
-                        0
-                      )
+                    ? transactions?.paymentId?.reduce((sum, wallet) => {
+                        if (wallet.status == PaymentStatus.COMPLETED) {
+                          return sum + wallet.amount;
+                        }
+                        return sum;
+                      }, 0)
                     : 0
                 )}
               </span>
@@ -189,15 +191,12 @@ export default function WalletComponent({
               </span>
               <span className="font-medium">
                 {formatPrice(
-                  transactions.paymentId?.reduce(
-                    (sum, wallet) => {
-                      if (wallet.status == PaymentStatus.REFUNDED) {
-                        return sum + wallet.amount
-                      }
-                      return sum
-                    },
-                    0
-                  )
+                  transactions.paymentId?.reduce((sum, wallet) => {
+                    if (wallet.status == PaymentStatus.REFUNDED) {
+                      return sum + wallet.amount;
+                    }
+                    return sum;
+                  }, 0)
                 )}
               </span>
             </div>
@@ -208,15 +207,12 @@ export default function WalletComponent({
               </span>
               <span className="font-medium">
                 {formatPrice(
-                  transactions.paymentId?.reduce(
-                    (sum, wallet) => {
-                      if (wallet.status == PaymentStatus.PENDING) {
-                        return sum + wallet.amount
-                      }
-                      return sum
-                    },
-                    0
-                  )
+                  transactions.paymentId?.reduce((sum, wallet) => {
+                    if (wallet.status == PaymentStatus.PENDING) {
+                      return sum + wallet.amount;
+                    }
+                    return sum;
+                  }, 0)
                 )}
               </span>
             </div>
