@@ -79,7 +79,7 @@ export function UpcomingEventsSection() {
                     className="w-[280px] sm:w-[300px] flex-shrink-0"
                   >
                     <CardHeader>
-                      <CardTitle className="text-lg sm:text-xl">
+                      <CardTitle className="text-lg sm:text-xl text-wrap">
                         {event.title}
                       </CardTitle>
                     </CardHeader>
