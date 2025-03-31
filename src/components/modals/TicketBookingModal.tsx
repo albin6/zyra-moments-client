@@ -91,7 +91,7 @@ export default function TicketBookingModal({
 
   // Calculate total price
   const subtotal = event.pricePerTicket * ticketCount;
-  const serviceFee = Math.round(subtotal * 0.05); // 5% service fee
+  const serviceFee = 0 // Math.round(subtotal * 0.05); // 5% service fee
   const totalPrice = subtotal + serviceFee;
 
   const modalContent = (

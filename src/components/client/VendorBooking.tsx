@@ -114,9 +114,9 @@ export default function VendorBooking() {
   const calculateTotal = () => {
     if (!selectedService) return 0;
     const basePrice = selectedService.servicePrice;
-    const platformFee = 5;
-    const gst = platformFee * 0.18;
-    return basePrice + platformFee + gst;
+    // const platformFee = 5;
+    // const gst = platformFee * 0.18;
+    return basePrice
   };
 
   if (isLoading) {
@@ -366,11 +366,11 @@ export default function VendorBooking() {
                       </div>
                       <div className="flex justify-between">
                         <span>Platform Fee</span>
-                        <span>₹5.00</span>
+                        <span>₹0.00</span>
                       </div>
                       <div className="flex justify-between">
                         <span>GST on Platform Fee</span>
-                        <span>₹0.90</span>
+                        <span>₹0.00</span>
                       </div>
                       <div className="flex justify-between font-medium pt-2 border-t">
                         <span>Total Amount</span>
